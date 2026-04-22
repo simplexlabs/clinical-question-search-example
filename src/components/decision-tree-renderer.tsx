@@ -21,7 +21,7 @@
 // Dependencies: Tailwind CSS. No other runtime imports beyond React.
 // =============================================================================
 
-import { useEffect, useMemo, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
 // -----------------------------------------------------------------------------
 // Schema types — mirror pa_resolver_lib/research/*/normalized/decision_trees/*.json
@@ -85,6 +85,7 @@ export type Question = {
 export type SourcePolicy = {
   source_id?: string;
   source_url?: string;
+  source_url_v2?: string;
   effective_date?: string;
 };
 
@@ -99,6 +100,25 @@ export type DecisionTreeDoc = {
 };
 
 export type Answers = Record<string, string>;
+
+// Tree-level source URL — propagated via context so citation badges can
+// deep-link to a PDF page even when the citation itself has no URL.
+const DocSourceUrlContext = createContext<string>('');
+
+// Compose a deep-link for a citation. Precedence:
+//   1. citation.citation_url (already pinned to a page, use as-is)
+//   2. citation.source_url, else tree-level source_policy.source_url, then
+//      append "#page=N" if the citation has a page and the URL has no fragment.
+function citeUrl(cite: Citation | undefined, docSourceUrl: string): string {
+  if (!cite) return '';
+  if (cite.citation_url) return cite.citation_url;
+  const base = cite.source_url || docSourceUrl || '';
+  if (!base) return '';
+  if (cite.page != null && !base.includes('#')) {
+    return `${base}#page=${cite.page}`;
+  }
+  return base;
+}
 
 export type Verdict =
   | { state: 'approved'; failures: []; pendingCount: 0 }
@@ -334,34 +354,39 @@ export function DecisionTreeRenderer({
 
   const verdict = useMemo(() => computeVerdict(byId, parents, answers), [byId, parents, answers]);
 
+  const docSourceUrl =
+    tree.source_policy?.source_url || tree.source_policy?.source_url_v2 || '';
+
   return (
-    <div className={className}>
-      {showSource && <PolicySourceStrip tree={tree} />}
+    <DocSourceUrlContext.Provider value={docSourceUrl}>
+      <div className={className}>
+        {showSource && <PolicySourceStrip tree={tree} />}
 
-      <div className={showSource ? 'mt-6' : ''}>
-        <VerdictBanner verdict={verdict} />
+        <div className={showSource ? 'mt-6' : ''}>
+          <VerdictBanner verdict={verdict} />
+        </div>
+
+        <div className="rounded-md border border-zinc-200 bg-white p-1">
+          <QuestionNode
+            q={tree.root}
+            answers={answers}
+            parents={parents}
+            setAnswer={setAnswer}
+          />
+        </div>
+
+        {showAnswers && (
+          <details className="mt-4 rounded border border-zinc-200 bg-zinc-50 px-3 py-2">
+            <summary className="cursor-pointer text-[13px] font-mono uppercase tracking-[0.18em] text-zinc-500">
+              Current answers
+            </summary>
+            <pre className="mt-3 max-h-[260px] overflow-auto rounded bg-white border border-zinc-200 p-3 text-[12px] leading-[1.5] text-zinc-700">
+              {JSON.stringify(answers, null, 2)}
+            </pre>
+          </details>
+        )}
       </div>
-
-      <div className="rounded-md border border-zinc-200 bg-white p-1">
-        <QuestionNode
-          q={tree.root}
-          answers={answers}
-          parents={parents}
-          setAnswer={setAnswer}
-        />
-      </div>
-
-      {showAnswers && (
-        <details className="mt-4 rounded border border-zinc-200 bg-zinc-50 px-3 py-2">
-          <summary className="cursor-pointer text-[13px] font-mono uppercase tracking-[0.18em] text-zinc-500">
-            Current answers
-          </summary>
-          <pre className="mt-3 max-h-[260px] overflow-auto rounded bg-white border border-zinc-200 p-3 text-[12px] leading-[1.5] text-zinc-700">
-            {JSON.stringify(answers, null, 2)}
-          </pre>
-        </details>
-      )}
-    </div>
+    </DocSourceUrlContext.Provider>
   );
 }
 
@@ -605,8 +630,9 @@ function CitationBadge({
   citation: Citation;
   className?: string;
 }) {
+  const docSourceUrl = useContext(DocSourceUrlContext);
   const label = citation.page != null ? `p.${citation.page}` : 'cite';
-  const href = citation.citation_url || citation.source_url || '#';
+  const href = citeUrl(citation, docSourceUrl) || '#';
   const tooltip = [
     citation.source_id &&
       `${citation.source_id}${citation.page != null ? ` · page ${citation.page}` : ''}`,
