@@ -19,9 +19,9 @@ npm run dev
 
 Open http://localhost:3000.
 
-Before you submit the form, the page pre-renders a real example tree
-(Caremark Wegovy) so you can see the renderer working. Submitting the form
-replaces the example with whatever the backend returns for the claim tuple.
+Submit the form with a pharmacy claim tuple and the page renders whatever
+decision tree the backend resolves it to, with the live verdict banner and
+policy citations.
 
 ## What's in here
 
@@ -33,10 +33,8 @@ src/
 │   ├── globals.css                  Tailwind + form-input defaults
 │   └── api/clinical-questions/
 │       └── route.ts                 proxy to /get_clinical_questions
-├── components/
-│   └── decision-tree-renderer.tsx   the reusable component
-└── data/
-    └── caremark_wegovy.json         example tree (Caremark Wegovy)
+└── components/
+    └── decision-tree-renderer.tsx   the reusable component
 ```
 
 ## `<DecisionTreeRenderer />`

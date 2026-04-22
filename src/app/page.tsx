@@ -1,13 +1,10 @@
 'use client';
 
-import { type ReactNode, FormEvent, useMemo, useState } from 'react';
+import { type ReactNode, FormEvent, useState } from 'react';
 import {
   DecisionTreeRenderer,
   type DecisionTreeDoc,
 } from '@/components/decision-tree-renderer';
-import caremarkWegovy from '@/data/caremark_wegovy.json';
-
-const EXAMPLE_TREE = caremarkWegovy as unknown as DecisionTreeDoc;
 
 type ClinicalQuestionsResponse = {
   matched?: boolean;
@@ -69,11 +66,7 @@ export default function ClinicalQuestionSearchPage() {
     }
   };
 
-  const treeToRender: DecisionTreeDoc = useMemo(() => {
-    if (response?.decision_tree?.root) return response.decision_tree;
-    return EXAMPLE_TREE;
-  }, [response]);
-  const usingFallback = !response?.decision_tree?.root;
+  const responseTree = response?.decision_tree?.root ? response.decision_tree : null;
 
   return (
     <main className="min-h-dvh bg-white text-zinc-900">
@@ -184,21 +177,17 @@ export default function ClinicalQuestionSearchPage() {
         <div className="mt-10">
           {response && <RoutingSummary response={response} />}
 
-          <div className="mt-8 mb-3 flex items-baseline justify-between gap-3">
-            <h2 className="text-[13px] font-mono uppercase tracking-[0.18em] text-zinc-500">
-              Questions
-            </h2>
-            {usingFallback && (
-              <span className="text-[11px] font-mono uppercase tracking-[0.15em] text-zinc-400">
-                Example tree
-              </span>
-            )}
-          </div>
-
-          <DecisionTreeRenderer
-            key={treeToRender.decision_tree_id || 'fallback'}
-            tree={treeToRender}
-          />
+          {responseTree && (
+            <>
+              <h2 className="mt-8 mb-3 text-[13px] font-mono uppercase tracking-[0.18em] text-zinc-500">
+                Questions
+              </h2>
+              <DecisionTreeRenderer
+                key={responseTree.decision_tree_id || 'response'}
+                tree={responseTree}
+              />
+            </>
+          )}
 
           {response && (
             <details className="mt-10 rounded-md border border-zinc-200 bg-zinc-50 px-3 py-2">
