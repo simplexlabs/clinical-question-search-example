@@ -185,6 +185,7 @@ export default function ClinicalQuestionSearchPage() {
               <DecisionTreeRenderer
                 key={responseTree.decision_tree_id || 'response'}
                 tree={responseTree}
+                sourceOnly
               />
             </>
           )}
@@ -233,35 +234,23 @@ function RoutingSummary({ response }: { response: ClinicalQuestionsResponse }) {
     ['LOB', r.line_of_business],
     ['PBM', r.pbm_name],
     ['Plan / group', r.plan_name_or_group],
-    [
-      'Confidence',
-      r.confidence === undefined
-        ? undefined
-        : typeof r.confidence === 'number'
-        ? r.confidence.toFixed(2)
-        : String(r.confidence),
-    ],
   ];
+
+  const visible = rows.filter(([, v]) => v !== undefined && v !== '');
+  if (visible.length === 0) return null;
 
   return (
     <div className="rounded-md border border-zinc-200 bg-zinc-50 p-4 mb-6">
       <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-3">
-        {rows
-          .filter(([, v]) => v !== undefined && v !== '')
-          .map(([k, v]) => (
-            <div key={k} className="flex flex-col">
-              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-500">
-                {k}
-              </span>
-              <span className="text-[14px] text-zinc-800 tabular-nums">{v}</span>
-            </div>
-          ))}
+        {visible.map(([k, v]) => (
+          <div key={k} className="flex flex-col">
+            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-500">
+              {k}
+            </span>
+            <span className="text-[14px] text-zinc-800 tabular-nums">{v}</span>
+          </div>
+        ))}
       </div>
-      {response.rationale && (
-        <p className="mt-4 text-[13px] leading-[1.6] text-zinc-600 text-pretty">
-          {response.rationale}
-        </p>
-      )}
     </div>
   );
 }

@@ -318,6 +318,12 @@ export type DecisionTreeRendererProps = {
   initialAnswers?: Answers;
   onAnswersChange?: (answers: Answers) => void;
   showSource?: boolean;
+  /**
+   * When true (and showSource is true), the policy source strip renders
+   * only the source URL row — no decision tree id, drug, policy id,
+   * effective date, or applicable LOBs. Defaults to false.
+   */
+  sourceOnly?: boolean;
   showAnswers?: boolean;
   className?: string;
 };
@@ -327,6 +333,7 @@ export function DecisionTreeRenderer({
   initialAnswers,
   onAnswersChange,
   showSource = true,
+  sourceOnly = false,
   showAnswers = true,
   className = '',
 }: DecisionTreeRendererProps) {
@@ -360,7 +367,7 @@ export function DecisionTreeRenderer({
   return (
     <DocSourceUrlContext.Provider value={docSourceUrl}>
       <div className={className}>
-        {showSource && <PolicySourceStrip tree={tree} />}
+        {showSource && <PolicySourceStrip tree={tree} sourceOnly={sourceOnly} />}
 
         <div className={showSource ? 'mt-6' : ''}>
           <VerdictBanner verdict={verdict} />
@@ -394,28 +401,38 @@ export function DecisionTreeRenderer({
 // Sub-components.
 // -----------------------------------------------------------------------------
 
-function PolicySourceStrip({ tree }: { tree: DecisionTreeDoc }) {
+function PolicySourceStrip({
+  tree,
+  sourceOnly = false,
+}: {
+  tree: DecisionTreeDoc;
+  sourceOnly?: boolean;
+}) {
   const sp = tree.source_policy || {};
   const rows: Array<[string, React.ReactNode]> = [];
-  if (tree.decision_tree_id) {
-    rows.push([
-      'Decision tree',
-      <code key="id" className="font-mono text-[12.5px] text-zinc-800">{tree.decision_tree_id}</code>,
-    ]);
+
+  if (!sourceOnly) {
+    if (tree.decision_tree_id) {
+      rows.push([
+        'Decision tree',
+        <code key="id" className="font-mono text-[12.5px] text-zinc-800">{tree.decision_tree_id}</code>,
+      ]);
+    }
+    if (tree.drug) {
+      const drugLabel = Array.isArray(tree.drug) ? tree.drug.join(', ') : tree.drug;
+      rows.push(['Drug', <span key="drug" className="capitalize">{drugLabel}</span>]);
+    }
+    if (sp.source_id) {
+      rows.push([
+        'Policy',
+        <code key="pol" className="font-mono text-[12.5px] text-zinc-800">{sp.source_id}</code>,
+      ]);
+    }
+    if (sp.effective_date) {
+      rows.push(['Effective', <span key="eff" className="tabular-nums">{sp.effective_date}</span>]);
+    }
   }
-  if (tree.drug) {
-    const drugLabel = Array.isArray(tree.drug) ? tree.drug.join(', ') : tree.drug;
-    rows.push(['Drug', <span key="drug" className="capitalize">{drugLabel}</span>]);
-  }
-  if (sp.source_id) {
-    rows.push([
-      'Policy',
-      <code key="pol" className="font-mono text-[12.5px] text-zinc-800">{sp.source_id}</code>,
-    ]);
-  }
-  if (sp.effective_date) {
-    rows.push(['Effective', <span key="eff" className="tabular-nums">{sp.effective_date}</span>]);
-  }
+
   if (sp.source_url) {
     rows.push([
       'Source',
@@ -431,7 +448,8 @@ function PolicySourceStrip({ tree }: { tree: DecisionTreeDoc }) {
     ]);
   }
 
-  if (rows.length === 0 && !tree.applicable_lobs?.length) return null;
+  const showLobs = !sourceOnly && tree.applicable_lobs && tree.applicable_lobs.length > 0;
+  if (rows.length === 0 && !showLobs) return null;
 
   return (
     <div className="rounded-md border border-zinc-200 bg-zinc-50 p-4">
@@ -444,13 +462,13 @@ function PolicySourceStrip({ tree }: { tree: DecisionTreeDoc }) {
             <span className="text-[14px] text-zinc-800">{value}</span>
           </div>
         ))}
-        {tree.applicable_lobs && tree.applicable_lobs.length > 0 && (
+        {showLobs && (
           <div className="flex flex-col gap-1.5">
             <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-500">
               Applicable LOBs
             </span>
             <div className="flex flex-wrap gap-1.5">
-              {tree.applicable_lobs.map((lob) => (
+              {tree.applicable_lobs!.map((lob) => (
                 <span
                   key={lob}
                   className="font-mono text-[11px] px-1.5 py-0.5 rounded bg-white border border-zinc-200 text-zinc-700"
