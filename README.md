@@ -1,36 +1,103 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Clinical question search — example app
 
-## Getting Started
+A minimal Next.js 16 app that demonstrates Simplex's `/get_clinical_questions`
+endpoint and the `<DecisionTreeRenderer />` component.
 
-First, run the development server:
+You enter a pharmacy claim tuple (BIN, PCN, State, Drug, ICD-10, optional
+Member ID). The server resolves it to the payer's clinical question tree and
+the UI walks you through the questions with a live "Likely approved / likely
+denied" verdict and inline policy citations.
+
+## Run it
 
 ```bash
+cp .env.example .env.local
+# paste your SIMPLEX_API_KEY into .env.local
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Before you submit the form, the page pre-renders a real example tree
+(Caremark Wegovy) so you can see the renderer working. Submitting the form
+replaces the example with whatever the backend returns for the claim tuple.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## What's in here
 
-## Learn More
+```
+src/
+├── app/
+│   ├── page.tsx                     form + results
+│   ├── layout.tsx
+│   ├── globals.css                  Tailwind + form-input defaults
+│   └── api/clinical-questions/
+│       └── route.ts                 proxy to /get_clinical_questions
+├── components/
+│   └── decision-tree-renderer.tsx   the reusable component
+└── data/
+    └── caremark_wegovy.json         example tree (Caremark Wegovy)
+```
 
-To learn more about Next.js, take a look at the following resources:
+## `<DecisionTreeRenderer />`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The star of the show. One self-contained file (`src/components/decision-tree-renderer.tsx`),
+React + Tailwind only, no other runtime deps. Drop it into any Next.js / React
+app and pass a decision-tree JSON in.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```tsx
+import {
+  DecisionTreeRenderer,
+  type DecisionTreeDoc,
+} from './decision-tree-renderer';
 
-## Deploy on Vercel
+<DecisionTreeRenderer
+  tree={treeJson}                       // required
+  initialAnswers={{ indication: 'wm_adult' }}
+  onAnswersChange={(next) => console.log(next)}
+  showSource={true}                     // policy source strip (default true)
+  showAnswers={true}                    // live-state panel (default true)
+  className="..."
+/>
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+It ports the semantics of `pa_resolver_lib`'s reference
+`tools/decision_tree_renderer.html`:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Visibility engine** — `eq`, `in`, `answered`, `not_answered`, `gte`, `lte`,
+  `between`. Coerces `"yes"` / `true` and `"no"` / `false` so trees that
+  encode boolean comparisons still drive radio inputs that store strings.
+- **Threshold evaluator** — `>=`, `<=`, `>`, `<`, `==`, `between` plus the
+  `gte`/`lte`/`gt`/`lt`/`eq` aliases the real trees use. Renders an inline
+  green/red status (`expects >= 10 years`) next to number fields.
+- **Verdict computation** — walks visible required nodes and classifies each
+  as pass / fail / pending, then aggregates:
+  - **Likely approved** (green) — every required node passes.
+  - **Likely denied** (red) — at least one required node fails; the banner
+    lists the failing criteria each with its own `p.N` citation link.
+  - **Pending** — nothing shown yet.
+- **Citations** — compact `p.N` badges that deep-link to the source policy
+  PDF (via `citation_url` or `source_url`) with a native-title tooltip
+  showing the verbatim quote.
+
+The disclaimer at the bottom of the verdict banner — *"Heuristic —
+evaluates visible required nodes only. Not a coverage decision."* — is
+important. The verdict is a UI affordance, not a plan determination.
+
+## API route
+
+`src/app/api/clinical-questions/route.ts` is a thin server-side proxy so the
+`SIMPLEX_API_KEY` never ships to the browser. It accepts a POST with JSON
+body from the client and forwards as a GET with query params and an
+`x-api-key` header per the backend's OpenAPI spec.
+
+Required env:
+
+| Key | Purpose |
+|---|---|
+| `SIMPLEX_API_KEY` | Your Simplex API key. |
+| `SIMPLEX_API_URL` | Optional override for the backend base URL. |
+
+## License
+
+See upstream Simplex product for terms.

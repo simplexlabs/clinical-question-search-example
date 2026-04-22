@@ -1,0 +1,777 @@
+{
+  "decision_tree_id": "caremark_global_antiobesity_wegovy_2025",
+  "schema_version": 1,
+  "drug": "wegovy",
+  "version": "2025",
+  "source_policy_id": "caremark_um_criteria_wegovy_2025",
+  "applicable_lobs": [
+    "aetna_caremark_4774c",
+    "aso_generic_caremark_wegovy",
+    "carefirst_caremark_wegovy",
+    "fehb_ghi_cvs_wegovy"
+  ],
+  "source_policy": {
+    "source_id": "caremark_um_criteria_wegovy_2025",
+    "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+    "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a"
+  },
+  "form_questionnaire": {
+    "questionnaire_id": "caremark-global-pa-antiobesity-wegovy"
+  },
+  "root": {
+    "id": "indication_selector",
+    "prompt": "Which indication is this prior authorization for?",
+    "input_type": "select",
+    "required": true,
+    "options": [
+      {"value": "mash_adult", "label": "Noncirrhotic MASH (Adult) — Wegovy Injection ONLY"},
+      {"value": "wm_adult_injection", "label": "Weight management (Adult) — Wegovy Injection"},
+      {"value": "wm_adult_tablet", "label": "Weight management (Adult) — Wegovy Tablet"},
+      {"value": "wm_peds_injection", "label": "Weight management (Pediatric 12-17) — Wegovy Injection ONLY"},
+      {"value": "mace_cv_adult", "label": "MACE-CV risk reduction (Adult) — Wegovy Injection or Tablet"}
+    ],
+    "citation": {
+      "source_id": "caremark_um_criteria_wegovy_2025",
+      "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+      "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+      "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=2",
+      "page": 2,
+      "verbatim_quote": "Authorization may be granted for the indications listed in the FDA-approved indications or compendial uses of Wegovy (semaglutide)."
+    },
+    "children": [
+      {
+        "id": "mash_adult_phase",
+        "prompt": "Is this initiation or continuation of therapy for MASH?",
+        "input_type": "select",
+        "required": true,
+        "options": [
+          {"value": "initiation", "label": "Initiation"},
+          {"value": "continuation", "label": "Continuation of therapy"}
+        ],
+        "visibility": {"depends_on": "indication_selector", "op": "eq", "value": "mash_adult"},
+        "citation": {
+          "source_id": "caremark_um_criteria_wegovy_2025",
+          "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+          "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+          "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=2",
+          "page": 2,
+          "verbatim_quote": "Noncirrhotic Metabolic Dysfunction-Associated Steatohepatitis (MASH): DOA: 12 months"
+        },
+        "approval_duration": {"initial_months": 12, "renewal_months": 12},
+        "children": [
+          {
+            "id": "mash_adult_init_wegovy_injection_only",
+            "prompt": "Is the request for Wegovy (semaglutide) injection?",
+            "input_type": "boolean",
+            "required": true,
+            "visibility": {"depends_on": "mash_adult_phase", "op": "eq", "value": "initiation"},
+            "citation": {
+              "source_id": "caremark_um_criteria_wegovy_2025",
+              "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+              "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+              "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=2",
+              "page": 2,
+              "verbatim_quote": "The request is for Wegovy (semaglutide) injection."
+            }
+          },
+          {
+            "id": "mash_adult_init_diet_and_activity",
+            "prompt": "Will the requested drug be used with a reduced-calorie diet AND increased physical activity?",
+            "input_type": "boolean",
+            "required": true,
+            "visibility": {"depends_on": "mash_adult_phase", "op": "eq", "value": "initiation"},
+            "citation": {
+              "source_id": "caremark_um_criteria_wegovy_2025",
+              "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+              "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+              "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=2",
+              "page": 2,
+              "verbatim_quote": "The requested drug is being used with a reduced-calorie diet AND increased physical activity."
+            },
+            "form_item_ref": {"questionnaire_id": "caremark-global-pa-antiobesity-wegovy", "link_id": "antiobesity_q6_concurrent_diet_and_activity"}
+          },
+          {
+            "id": "mash_adult_init_prescriber_specialty",
+            "prompt": "Is the requested drug being prescribed by, or in consultation with, a gastroenterologist or hepatologist?",
+            "input_type": "boolean",
+            "required": true,
+            "visibility": {"depends_on": "mash_adult_phase", "op": "eq", "value": "initiation"},
+            "citation": {
+              "source_id": "caremark_um_criteria_wegovy_2025",
+              "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+              "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+              "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=2",
+              "page": 2,
+              "verbatim_quote": "The requested drug is being prescribed by, or in consultation with, a gastroenterologist or hepatologist."
+            }
+          },
+          {
+            "id": "mash_adult_init_fibrosis_confirmation",
+            "prompt": "Has the patient's moderate to advanced liver fibrosis (consistent with stages F2 to F3) at baseline been confirmed by biopsy, imaging (MRE/VCTE), or non-invasive blood markers?",
+            "input_type": "boolean",
+            "required": true,
+            "visibility": {"depends_on": "mash_adult_phase", "op": "eq", "value": "initiation"},
+            "citation": {
+              "source_id": "caremark_um_criteria_wegovy_2025",
+              "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+              "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+              "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=2",
+              "page": 2,
+              "verbatim_quote": "The patient's moderate to advanced liver fibrosis (consistent with stages F2 to F3 fibrosis) at baseline has been confirmed by ONE of the following..."
+            }
+          },
+          {
+            "id": "mash_adult_cont_wegovy_injection_only",
+            "prompt": "Is the request for Wegovy (semaglutide) injection?",
+            "input_type": "boolean",
+            "required": true,
+            "visibility": {"depends_on": "mash_adult_phase", "op": "eq", "value": "continuation"},
+            "citation": {
+              "source_id": "caremark_um_criteria_wegovy_2025",
+              "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+              "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+              "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=4",
+              "page": 4,
+              "verbatim_quote": "The request is for Wegovy (semaglutide) injection."
+            }
+          },
+          {
+            "id": "mash_adult_cont_diet_and_activity",
+            "prompt": "Will the requested drug continue to be used with a reduced-calorie diet AND increased physical activity?",
+            "input_type": "boolean",
+            "required": true,
+            "visibility": {"depends_on": "mash_adult_phase", "op": "eq", "value": "continuation"},
+            "citation": {
+              "source_id": "caremark_um_criteria_wegovy_2025",
+              "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+              "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+              "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=4",
+              "page": 4,
+              "verbatim_quote": "The requested drug is being used with a reduced-calorie diet AND increased physical activity."
+            },
+            "form_item_ref": {"questionnaire_id": "caremark-global-pa-antiobesity-wegovy", "link_id": "antiobesity_q6_concurrent_diet_and_activity"}
+          },
+          {
+            "id": "mash_adult_cont_positive_clinical_response",
+            "prompt": "Has the patient achieved or maintained a positive clinical response (e.g., improvement in liver function such as reduced ALT/AST, or reduction in liver fibrosis stage)?",
+            "input_type": "boolean",
+            "required": true,
+            "visibility": {"depends_on": "mash_adult_phase", "op": "eq", "value": "continuation"},
+            "citation": {
+              "source_id": "caremark_um_criteria_wegovy_2025",
+              "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+              "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+              "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=4",
+              "page": 4,
+              "verbatim_quote": "The patient has achieved or maintained a positive clinical response to the requested drug (e.g., improvement in liver function such as reduction in ALT and AST...)."
+            }
+          },
+          {
+            "id": "mash_adult_cont_maintenance_dose",
+            "prompt": "Is the patient being treated with a maintenance dosage of the requested drug based on individual treatment response and tolerability?",
+            "input_type": "boolean",
+            "required": true,
+            "visibility": {"depends_on": "mash_adult_phase", "op": "eq", "value": "continuation"},
+            "citation": {
+              "source_id": "caremark_um_criteria_wegovy_2025",
+              "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+              "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+              "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=4",
+              "page": 4,
+              "verbatim_quote": "The patient is being treated with a maintenance dosage of the requested drug which is based on individual treatment response and tolerability."
+            }
+          }
+        ]
+      },
+      {
+        "id": "wm_adult_injection_phase",
+        "prompt": "Is this initiation or continuation of Wegovy injection for adult weight management?",
+        "input_type": "select",
+        "required": true,
+        "options": [
+          {"value": "initiation", "label": "Initiation"},
+          {"value": "continuation", "label": "Continuation of therapy"}
+        ],
+        "visibility": {"depends_on": "indication_selector", "op": "eq", "value": "wm_adult_injection"},
+        "citation": {
+          "source_id": "caremark_um_criteria_wegovy_2025",
+          "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+          "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+          "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=2",
+          "page": 2,
+          "verbatim_quote": "Reduction in excess body weight, maintenance of weight reduction long term: Initial therapy DOA: 7 months; Continuation of therapy DOA: 12 months (Wegovy Injection)."
+        },
+        "approval_duration": {"initial_months": 7, "renewal_months": 12},
+        "children": [
+          {
+            "id": "wm_adult_init_age_18_or_older",
+            "prompt": "What is the patient's age in years?",
+            "input_type": "number",
+            "required": true,
+            "validation": {"min": 0, "units": "years"},
+            "visibility": {"depends_on": "wm_adult_injection_phase", "op": "eq", "value": "initiation"},
+            "citation": {
+              "source_id": "caremark_um_criteria_wegovy_2025",
+              "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+              "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+              "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=2",
+              "page": 2,
+              "verbatim_quote": "The patient is 18 years of age or older."
+            },
+            "threshold": {"variable": "age", "operator": ">=", "value": 18, "units": "years"},
+            "member_context_path": "patient.age_years"
+          },
+          {
+            "id": "wm_adult_init_diet_and_activity",
+            "prompt": "Will Wegovy be used with a reduced-calorie diet AND increased physical activity?",
+            "input_type": "boolean",
+            "required": true,
+            "visibility": {"depends_on": "wm_adult_injection_phase", "op": "eq", "value": "initiation"},
+            "citation": {
+              "source_id": "caremark_um_criteria_wegovy_2025",
+              "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+              "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+              "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=2",
+              "page": 2,
+              "verbatim_quote": "Authorization may be granted when the requested drug will be used with a reduced-calorie diet AND increased physical activity to reduce excess body weight."
+            },
+            "form_item_ref": {"questionnaire_id": "caremark-global-pa-antiobesity-wegovy", "link_id": "antiobesity_q6_concurrent_diet_and_activity"}
+          },
+          {
+            "id": "wm_adult_init_6mo_wm_program",
+            "prompt": "Has the patient participated in a comprehensive weight management program (behavioral modification, reduced-calorie diet, increased physical activity) for at least 6 months?",
+            "input_type": "boolean",
+            "required": true,
+            "visibility": {"depends_on": "wm_adult_injection_phase", "op": "eq", "value": "initiation"},
+            "citation": {
+              "source_id": "caremark_um_criteria_wegovy_2025",
+              "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+              "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+              "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=3",
+              "page": 3,
+              "verbatim_quote": "The patient has participated in a comprehensive weight management program that encourages behavioral modification, reduced-calorie diet, AND increased physical activity for at least 6 months."
+            },
+            "threshold": {"variable": "weight_management_program_duration", "operator": ">=", "value": 6, "units": "months"},
+            "form_item_ref": {"questionnaire_id": "caremark-global-pa-antiobesity-wegovy", "link_id": "antiobesity_q5_behavioral_program_6mo"}
+          },
+          {
+            "id": "wm_adult_init_bmi_branch",
+            "prompt": "Which BMI criterion does the patient meet?",
+            "input_type": "select",
+            "required": true,
+            "options": [
+              {"value": "bmi_ge_30", "label": "BMI ≥ 30 kg/m²"},
+              {"value": "bmi_ge_27_with_comorbid", "label": "BMI ≥ 27 kg/m² with a weight-related comorbid condition"}
+            ],
+            "visibility": {"depends_on": "wm_adult_injection_phase", "op": "eq", "value": "initiation"},
+            "citation": {
+              "source_id": "caremark_um_criteria_wegovy_2025",
+              "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+              "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+              "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=3",
+              "page": 3,
+              "verbatim_quote": "The patient meets ONE of the following: ▪ The patient has a baseline body mass index (BMI) greater than or equal to 30 kg/m² ... ▪ The patient has a baseline BMI greater than or equal to 27 kg/m² AND at least ONE weight-related comorbid condition."
+            },
+            "children": [
+              {
+                "id": "wm_adult_init_bmi_value",
+                "prompt": "What is the patient's baseline BMI (kg/m²)?",
+                "input_type": "number",
+                "required": true,
+                "validation": {"min": 0, "units": "kg/m2"},
+                "visibility": {"depends_on": "wm_adult_init_bmi_branch", "op": "answered"},
+                "citation": {
+                  "source_id": "caremark_um_criteria_wegovy_2025",
+                  "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+                  "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+                  "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=3",
+                  "page": 3,
+                  "verbatim_quote": "baseline body mass index (BMI)"
+                },
+                "member_context_path": "patient.bmi",
+                "form_item_ref": {"questionnaire_id": "caremark-global-pa-antiobesity-wegovy", "link_id": "antiobesity_q2_bmi_ge_30"}
+              },
+              {
+                "id": "wm_adult_init_weight_related_comorbid",
+                "prompt": "Does the patient have at least ONE weight-related comorbid condition (e.g., hypertension, type 2 diabetes mellitus, dyslipidemia)?",
+                "input_type": "boolean",
+                "required": true,
+                "visibility": {"depends_on": "wm_adult_init_bmi_branch", "op": "eq", "value": "bmi_ge_27_with_comorbid"},
+                "citation": {
+                  "source_id": "caremark_um_criteria_wegovy_2025",
+                  "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+                  "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+                  "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=3",
+                  "page": 3,
+                  "verbatim_quote": "The patient has at least ONE weight-related comorbid condition (e.g., hypertension, type 2 diabetes mellitus, dyslipidemia)."
+                },
+                "form_item_ref": {"questionnaire_id": "caremark-global-pa-antiobesity-wegovy", "link_id": "antiobesity_q3_bmi_ge_27_with_comorbidity"}
+              }
+            ]
+          },
+          {
+            "id": "wm_adult_cont_age_18_or_older",
+            "prompt": "What is the patient's age in years?",
+            "input_type": "number",
+            "required": true,
+            "validation": {"min": 0, "units": "years"},
+            "visibility": {"depends_on": "wm_adult_injection_phase", "op": "eq", "value": "continuation"},
+            "citation": {
+              "source_id": "caremark_um_criteria_wegovy_2025",
+              "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+              "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+              "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=5",
+              "page": 5,
+              "verbatim_quote": "The patient is 18 years of age or older."
+            },
+            "threshold": {"variable": "age", "operator": ">=", "value": 18, "units": "years"},
+            "member_context_path": "patient.age_years"
+          },
+          {
+            "id": "wm_adult_cont_3mo_stable_dose",
+            "prompt": "Has the patient completed at least 3 months of therapy with Wegovy at a stable maintenance dose?",
+            "input_type": "boolean",
+            "required": true,
+            "visibility": {"depends_on": "wm_adult_injection_phase", "op": "eq", "value": "continuation"},
+            "citation": {
+              "source_id": "caremark_um_criteria_wegovy_2025",
+              "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+              "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+              "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=5",
+              "page": 5,
+              "verbatim_quote": "The patient has completed at least 3 months of therapy with the requested drug at a stable maintenance dose."
+            },
+            "threshold": {"variable": "therapy_duration_stable_dose", "operator": ">=", "value": 3, "units": "months"},
+            "form_item_ref": {"questionnaire_id": "caremark-global-pa-antiobesity-wegovy", "link_id": "antiobesity_q1_prior_therapy_and_weight_loss"}
+          },
+          {
+            "id": "wm_adult_cont_5pct_weight_loss",
+            "prompt": "Has the patient lost at least 5% of baseline body weight OR continued to maintain the initial 5% weight loss?",
+            "input_type": "boolean",
+            "required": true,
+            "visibility": {"depends_on": "wm_adult_injection_phase", "op": "eq", "value": "continuation"},
+            "citation": {
+              "source_id": "caremark_um_criteria_wegovy_2025",
+              "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+              "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+              "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=5",
+              "page": 5,
+              "verbatim_quote": "The patient has lost at least 5 percent of baseline body weight OR the patient has continued to maintain their initial 5 percent weight loss."
+            },
+            "threshold": {"variable": "percent_weight_loss_from_baseline", "operator": ">=", "value": 5, "units": "percent"},
+            "form_item_ref": {"questionnaire_id": "caremark-global-pa-antiobesity-wegovy", "link_id": "antiobesity_q1_prior_therapy_and_weight_loss"}
+          }
+        ]
+      },
+      {
+        "id": "wm_adult_tablet_phase",
+        "prompt": "Is this initiation or continuation of Wegovy tablet for adult weight management?",
+        "input_type": "select",
+        "required": true,
+        "options": [
+          {"value": "initiation", "label": "Initiation"},
+          {"value": "continuation", "label": "Continuation of therapy"}
+        ],
+        "visibility": {"depends_on": "indication_selector", "op": "eq", "value": "wm_adult_tablet"},
+        "citation": {
+          "source_id": "caremark_um_criteria_wegovy_2025",
+          "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+          "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+          "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=2",
+          "page": 2,
+          "verbatim_quote": "Wegovy Tablet: Initial therapy DOA: 6 months; Continuation of therapy DOA: 12 months."
+        },
+        "approval_duration": {"initial_months": 6, "renewal_months": 12},
+        "children": [
+          {
+            "id": "wm_adult_tablet_init_diet_and_activity",
+            "prompt": "Will Wegovy tablet be used in combination with a reduced-calorie diet AND increased physical activity?",
+            "input_type": "boolean",
+            "required": true,
+            "visibility": {"depends_on": "wm_adult_tablet_phase", "op": "eq", "value": "initiation"},
+            "citation": {
+              "source_id": "caremark_um_criteria_wegovy_2025",
+              "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+              "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+              "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=2",
+              "page": 2,
+              "verbatim_quote": "Wegovy tablets are indicated in combination with a reduced calorie diet and increased physical activity."
+            },
+            "form_item_ref": {"questionnaire_id": "caremark-global-pa-antiobesity-wegovy", "link_id": "antiobesity_q6_concurrent_diet_and_activity"}
+          },
+          {
+            "id": "wm_adult_tablet_init_use_case",
+            "prompt": "Which FDA-approved use applies?",
+            "input_type": "select",
+            "required": true,
+            "options": [
+              {"value": "mace_with_cvd_and_overweight_or_obesity", "label": "MACE-CV risk reduction in adults with established CVD and obesity or overweight"},
+              {"value": "obesity", "label": "Reduction in excess body weight — obesity"},
+              {"value": "overweight_with_comorbid", "label": "Reduction in excess body weight — overweight with a weight-related comorbid condition"}
+            ],
+            "visibility": {"depends_on": "wm_adult_tablet_phase", "op": "eq", "value": "initiation"},
+            "citation": {
+              "source_id": "caremark_um_criteria_wegovy_2025",
+              "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+              "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+              "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=2",
+              "page": 2,
+              "verbatim_quote": "To reduce the risk of major adverse CV events (CV death, non-fatal myocardial infarction, or non-fatal stroke) in adults with established cardiovascular disease and either obesity or overweight."
+            }
+          },
+          {
+            "id": "wm_adult_tablet_init_ql_check",
+            "prompt": "Is the requested quantity within plan limits (≤ 30 tablets / 25 days or ≤ 90 tablets / 75 days)?",
+            "input_type": "boolean",
+            "required": true,
+            "visibility": {"depends_on": "wm_adult_tablet_phase", "op": "eq", "value": "initiation"},
+            "citation": {
+              "source_id": "caremark_um_criteria_wegovy_2025",
+              "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+              "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+              "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=6",
+              "page": 6,
+              "verbatim_quote": "Wegovy (semaglutide) tablet 1.5 mg, 4 mg, 9 mg, 25 mg — 1 Month Limit: 30 tablets / 25 days; 3 Month Limit: 90 tablets / 75 days."
+            },
+            "threshold": {"variable": "quantity_limit_per_25_days", "operator": "<=", "value": 30, "units": "tablets"}
+          },
+          {
+            "id": "wm_adult_tablet_cont_see_injection",
+            "prompt": "For continuation of Wegovy tablet: the adult weight-management continuation criteria apply (3-month stable dose AND ≥5% weight loss or maintained). Does the patient meet them?",
+            "input_type": "boolean",
+            "required": true,
+            "visibility": {"depends_on": "wm_adult_tablet_phase", "op": "eq", "value": "continuation"},
+            "citation": {
+              "source_id": "caremark_um_criteria_wegovy_2025",
+              "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+              "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+              "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=5",
+              "page": 5,
+              "verbatim_quote": "Continuation of Therapy — Reduction in Excess Body Weight, Maintenance of Weight Reduction Long Term (Adult): see adult weight-management continuation criteria."
+            },
+            "form_item_ref": {"questionnaire_id": "caremark-global-pa-antiobesity-wegovy", "link_id": "antiobesity_q1_prior_therapy_and_weight_loss"}
+          }
+        ]
+      },
+      {
+        "id": "wm_peds_injection_phase",
+        "prompt": "Is this initiation or continuation of Wegovy injection for pediatric (12-17) weight management?",
+        "input_type": "select",
+        "required": true,
+        "options": [
+          {"value": "initiation", "label": "Initiation"},
+          {"value": "continuation", "label": "Continuation of therapy"}
+        ],
+        "visibility": {"depends_on": "indication_selector", "op": "eq", "value": "wm_peds_injection"},
+        "citation": {
+          "source_id": "caremark_um_criteria_wegovy_2025",
+          "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+          "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+          "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=3",
+          "page": 3,
+          "verbatim_quote": "Reduction in excess body weight, maintenance of weight reduction long term: Initial therapy DOA: 7 months; Continuation of therapy DOA: 12 months."
+        },
+        "approval_duration": {"initial_months": 7, "renewal_months": 12},
+        "children": [
+          {
+            "id": "wm_peds_init_age_12_to_17",
+            "prompt": "What is the patient's age in years?",
+            "input_type": "number",
+            "required": true,
+            "validation": {"min": 0, "max": 21, "units": "years"},
+            "visibility": {"depends_on": "wm_peds_injection_phase", "op": "eq", "value": "initiation"},
+            "citation": {
+              "source_id": "caremark_um_criteria_wegovy_2025",
+              "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+              "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+              "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=3",
+              "page": 3,
+              "verbatim_quote": "The patient is 12 to 17 years of age."
+            },
+            "threshold": {"variable": "age", "operator": "between", "value": [12, 17], "units": "years"},
+            "member_context_path": "patient.age_years",
+            "form_item_ref": {"questionnaire_id": "caremark-global-pa-antiobesity-wegovy", "link_id": "antiobesity_q9_pediatric_12_17"}
+          },
+          {
+            "id": "wm_peds_init_wegovy_injection_only",
+            "prompt": "Is the request for Wegovy (semaglutide) injection?",
+            "input_type": "boolean",
+            "required": true,
+            "visibility": {"depends_on": "wm_peds_injection_phase", "op": "eq", "value": "initiation"},
+            "citation": {
+              "source_id": "caremark_um_criteria_wegovy_2025",
+              "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+              "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+              "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=3",
+              "page": 3,
+              "verbatim_quote": "The request is for Wegovy (semaglutide) injection."
+            }
+          },
+          {
+            "id": "wm_peds_init_6mo_wm_program",
+            "prompt": "Has the patient participated in a comprehensive weight management program for at least 6 months?",
+            "input_type": "boolean",
+            "required": true,
+            "visibility": {"depends_on": "wm_peds_injection_phase", "op": "eq", "value": "initiation"},
+            "citation": {
+              "source_id": "caremark_um_criteria_wegovy_2025",
+              "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+              "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+              "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=3",
+              "page": 3,
+              "verbatim_quote": "The patient has participated in a comprehensive weight management program that encourages behavioral modification, reduced-calorie diet, AND increased physical activity for at least 6 months."
+            },
+            "threshold": {"variable": "weight_management_program_duration", "operator": ">=", "value": 6, "units": "months"},
+            "form_item_ref": {"questionnaire_id": "caremark-global-pa-antiobesity-wegovy", "link_id": "antiobesity_q5_behavioral_program_6mo"}
+          },
+          {
+            "id": "wm_peds_init_bmi_95th_percentile",
+            "prompt": "What is the patient's baseline BMI percentile (standardized for age and sex)?",
+            "input_type": "number",
+            "required": true,
+            "validation": {"min": 0, "max": 100, "units": "percentile"},
+            "visibility": {"depends_on": "wm_peds_injection_phase", "op": "eq", "value": "initiation"},
+            "citation": {
+              "source_id": "caremark_um_criteria_wegovy_2025",
+              "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+              "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+              "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=3",
+              "page": 3,
+              "verbatim_quote": "The patient has a baseline BMI in the 95th percentile or greater standardized for age and sex (obesity)."
+            },
+            "threshold": {"variable": "bmi_percentile_for_age_sex", "operator": ">=", "value": 95, "units": "percentile"},
+            "member_context_path": "patient.bmi_percentile"
+          },
+          {
+            "id": "wm_peds_cont_age_12_to_17",
+            "prompt": "What is the patient's age in years?",
+            "input_type": "number",
+            "required": true,
+            "validation": {"min": 0, "max": 21, "units": "years"},
+            "visibility": {"depends_on": "wm_peds_injection_phase", "op": "eq", "value": "continuation"},
+            "citation": {
+              "source_id": "caremark_um_criteria_wegovy_2025",
+              "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+              "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+              "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=5",
+              "page": 5,
+              "verbatim_quote": "The patient is 12 to 17 years of age."
+            },
+            "threshold": {"variable": "age", "operator": "between", "value": [12, 17], "units": "years"},
+            "member_context_path": "patient.age_years"
+          },
+          {
+            "id": "wm_peds_cont_stable_maintenance_dose",
+            "prompt": "Has the patient successfully titrated to a stable maintenance dose?",
+            "input_type": "boolean",
+            "required": true,
+            "visibility": {"depends_on": "wm_peds_injection_phase", "op": "eq", "value": "continuation"},
+            "citation": {
+              "source_id": "caremark_um_criteria_wegovy_2025",
+              "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+              "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+              "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=5",
+              "page": 5,
+              "verbatim_quote": "The patient has successfully titrated to a stable maintenance dose."
+            },
+            "form_item_ref": {"questionnaire_id": "caremark-global-pa-antiobesity-wegovy", "link_id": "antiobesity_q1_prior_therapy_and_weight_loss"}
+          },
+          {
+            "id": "wm_peds_cont_bmi_reduction",
+            "prompt": "Has the patient had a reduction from baseline BMI OR maintained the initial BMI reduction?",
+            "input_type": "boolean",
+            "required": true,
+            "visibility": {"depends_on": "wm_peds_injection_phase", "op": "eq", "value": "continuation"},
+            "citation": {
+              "source_id": "caremark_um_criteria_wegovy_2025",
+              "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+              "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+              "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=5",
+              "page": 5,
+              "verbatim_quote": "The patient has had a reduction from their baseline body mass index (BMI) OR the patient has continued to maintain their initial BMI reduction."
+            },
+            "form_item_ref": {"questionnaire_id": "caremark-global-pa-antiobesity-wegovy", "link_id": "antiobesity_q1_prior_therapy_and_weight_loss"}
+          }
+        ]
+      },
+      {
+        "id": "mace_cv_adult_phase",
+        "prompt": "Is this initiation or continuation of therapy for MACE-CV risk reduction?",
+        "input_type": "select",
+        "required": true,
+        "options": [
+          {"value": "initiation", "label": "Initiation"},
+          {"value": "continuation", "label": "Continuation of therapy"}
+        ],
+        "visibility": {"depends_on": "indication_selector", "op": "eq", "value": "mace_cv_adult"},
+        "citation": {
+          "source_id": "caremark_um_criteria_wegovy_2025",
+          "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+          "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+          "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=3",
+          "page": 3,
+          "verbatim_quote": "Risk reduction of major adverse cardiovascular events: DOA: 12 months"
+        },
+        "approval_duration": {"initial_months": 12, "renewal_months": 12},
+        "children": [
+          {
+            "id": "mace_init_diet_and_activity",
+            "prompt": "Will the requested drug be used with a reduced-calorie diet AND increased physical activity?",
+            "input_type": "boolean",
+            "required": true,
+            "visibility": {"depends_on": "mace_cv_adult_phase", "op": "eq", "value": "initiation"},
+            "citation": {
+              "source_id": "caremark_um_criteria_wegovy_2025",
+              "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+              "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+              "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=3",
+              "page": 3,
+              "verbatim_quote": "The requested drug is being used with a reduced-calorie diet AND increased physical activity."
+            },
+            "form_item_ref": {"questionnaire_id": "caremark-global-pa-antiobesity-wegovy", "link_id": "antiobesity_q6_concurrent_diet_and_activity"}
+          },
+          {
+            "id": "mace_init_established_cvd_history",
+            "prompt": "Which form of established cardiovascular disease does the patient have?",
+            "input_type": "select",
+            "required": true,
+            "options": [
+              {"value": "previous_mi", "label": "Previous MI"},
+              {"value": "previous_stroke", "label": "Previous stroke"},
+              {"value": "symptomatic_pad", "label": "Symptomatic peripheral arterial disease (ABI < 0.85)"},
+              {"value": "prior_revascularization", "label": "Prior revascularization (CABG, PCI, or angioplasty)"}
+            ],
+            "visibility": {"depends_on": "mace_cv_adult_phase", "op": "eq", "value": "initiation"},
+            "citation": {
+              "source_id": "caremark_um_criteria_wegovy_2025",
+              "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+              "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+              "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=4",
+              "page": 4,
+              "verbatim_quote": "The patient has established cardiovascular disease with a history of ONE of the following: Previous MI; Previous stroke; Symptomatic peripheral arterial disease (PAD), as evidenced by intermittent claudication with ankle-brachial index (ABI) less than 0.85; Prior history of revascularization."
+            },
+            "children": [
+              {
+                "id": "mace_init_pad_abi",
+                "prompt": "What is the patient's ankle-brachial index (ABI)?",
+                "input_type": "number",
+                "required": true,
+                "validation": {"min": 0, "max": 2, "units": "ratio"},
+                "visibility": {"depends_on": "mace_init_established_cvd_history", "op": "eq", "value": "symptomatic_pad"},
+                "citation": {
+                  "source_id": "caremark_um_criteria_wegovy_2025",
+                  "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+                  "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+                  "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=4",
+                  "page": 4,
+                  "verbatim_quote": "Symptomatic peripheral arterial disease (PAD), as evidenced by intermittent claudication with ankle-brachial index (ABI) less than 0.85."
+                },
+                "threshold": {"variable": "ankle_brachial_index", "operator": "<", "value": 0.85, "units": "ratio"}
+              }
+            ]
+          },
+          {
+            "id": "mace_init_bmi_27",
+            "prompt": "What is the patient's baseline BMI (kg/m²)?",
+            "input_type": "number",
+            "required": true,
+            "validation": {"min": 0, "units": "kg/m2"},
+            "visibility": {"depends_on": "mace_cv_adult_phase", "op": "eq", "value": "initiation"},
+            "citation": {
+              "source_id": "caremark_um_criteria_wegovy_2025",
+              "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+              "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+              "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=4",
+              "page": 4,
+              "verbatim_quote": "The patient has a baseline body mass index (BMI) greater than or equal to 27 kg/m²."
+            },
+            "threshold": {"variable": "bmi", "operator": ">=", "value": 27, "units": "kg/m2"},
+            "member_context_path": "patient.bmi"
+          },
+          {
+            "id": "mace_init_no_type_2_diabetes",
+            "prompt": "Is the patient FREE of type 2 diabetes? (Type 2 diabetes patients should be considered for Ozempic instead.)",
+            "input_type": "boolean",
+            "required": true,
+            "visibility": {"depends_on": "mace_cv_adult_phase", "op": "eq", "value": "initiation"},
+            "citation": {
+              "source_id": "caremark_um_criteria_wegovy_2025",
+              "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+              "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+              "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=4",
+              "page": 4,
+              "verbatim_quote": "The patient does NOT have type 2 diabetes. [NOTE: Ozempic is indicated to reduce the risk of major cardiovascular events in adults with type 2 diabetes.]"
+            }
+          },
+          {
+            "id": "mace_init_gdmt_or_clinical_reason",
+            "prompt": "Is the patient currently receiving guideline-directed management and therapy (GDMT) for CVD (e.g., lipid-lowering agent, antiplatelet therapy, antihypertensive), OR is there a documented clinical reason they cannot?",
+            "input_type": "boolean",
+            "required": true,
+            "visibility": {"depends_on": "mace_cv_adult_phase", "op": "eq", "value": "initiation"},
+            "citation": {
+              "source_id": "caremark_um_criteria_wegovy_2025",
+              "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+              "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+              "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=4",
+              "page": 4,
+              "verbatim_quote": "The patient is currently receiving guideline-directed management and therapy (GDMT) for cardiovascular disease (e.g., lipid-lowering agent, antiplatelet therapy, antihypertensive)."
+            }
+          },
+          {
+            "id": "mace_cont_diet_and_activity",
+            "prompt": "Will the requested drug continue to be used with a reduced-calorie diet AND increased physical activity?",
+            "input_type": "boolean",
+            "required": true,
+            "visibility": {"depends_on": "mace_cv_adult_phase", "op": "eq", "value": "continuation"},
+            "citation": {
+              "source_id": "caremark_um_criteria_wegovy_2025",
+              "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+              "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+              "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=5",
+              "page": 5,
+              "verbatim_quote": "The requested drug is being used with a reduced-calorie diet AND increased physical activity."
+            },
+            "form_item_ref": {"questionnaire_id": "caremark-global-pa-antiobesity-wegovy", "link_id": "antiobesity_q6_concurrent_diet_and_activity"}
+          },
+          {
+            "id": "mace_cont_established_cvd_history",
+            "prompt": "Which form of established cardiovascular disease does the patient have?",
+            "input_type": "select",
+            "required": true,
+            "options": [
+              {"value": "previous_mi", "label": "Previous MI"},
+              {"value": "previous_stroke", "label": "Previous stroke"},
+              {"value": "symptomatic_pad", "label": "Symptomatic PAD (ABI < 0.85)"},
+              {"value": "prior_revascularization", "label": "Prior revascularization (CABG, PCI, or angioplasty)"}
+            ],
+            "visibility": {"depends_on": "mace_cv_adult_phase", "op": "eq", "value": "continuation"},
+            "citation": {
+              "source_id": "caremark_um_criteria_wegovy_2025",
+              "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+              "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+              "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=5",
+              "page": 5,
+              "verbatim_quote": "The patient has established cardiovascular disease with a history of ONE of the following..."
+            }
+          },
+          {
+            "id": "mace_cont_maintenance_dose",
+            "prompt": "Is the patient being treated with a maintenance dosage of the requested drug based on individual treatment response and tolerability?",
+            "input_type": "boolean",
+            "required": true,
+            "visibility": {"depends_on": "mace_cv_adult_phase", "op": "eq", "value": "continuation"},
+            "citation": {
+              "source_id": "caremark_um_criteria_wegovy_2025",
+              "source_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf",
+              "sha256": "44e207cfdd5120e812b9cd0e7804b35b41b4d26728d77bb57a5b0e80e32f6c7a",
+              "citation_url": "https://info.caremark.com/content/dam/enterprise/caremark/microsites/dig/pdfs/pa-cf/cf_rxcriteria/CF_RxCriteria_WEGOVY_4774-C.pdf#page=6",
+              "page": 6,
+              "verbatim_quote": "The patient is being treated with a maintenance dosage of the requested drug which is based on individual treatment response and tolerability."
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
