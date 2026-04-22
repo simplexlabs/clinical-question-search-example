@@ -92,7 +92,7 @@ export type SourcePolicy = {
 export type DecisionTreeDoc = {
   decision_tree_id?: string;
   schema_version?: number;
-  drug?: string;
+  drug?: string | string[];
   version?: string;
   source_policy?: SourcePolicy;
   applicable_lobs?: string[];
@@ -403,7 +403,10 @@ function PolicySourceStrip({ tree }: { tree: DecisionTreeDoc }) {
       <code key="id" className="font-mono text-[12.5px] text-zinc-800">{tree.decision_tree_id}</code>,
     ]);
   }
-  if (tree.drug) rows.push(['Drug', <span key="drug" className="capitalize">{tree.drug}</span>]);
+  if (tree.drug) {
+    const drugLabel = Array.isArray(tree.drug) ? tree.drug.join(', ') : tree.drug;
+    rows.push(['Drug', <span key="drug" className="capitalize">{drugLabel}</span>]);
+  }
   if (sp.source_id) {
     rows.push([
       'Policy',
