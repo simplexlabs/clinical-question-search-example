@@ -634,7 +634,7 @@ function CitationBadge({
   className?: string;
 }) {
   const docSourceUrl = useContext(DocSourceUrlContext);
-  const label = citation.page != null ? `p.${citation.page}` : 'cite';
+  const label = 'source';
   const href = citeUrl(citation, docSourceUrl) || '#';
   const tooltip = [
     citation.source_id &&
