@@ -488,7 +488,13 @@ function VerdictBanner({ verdict }: { verdict: Verdict }) {
             <li key={f.q.id + i} className="text-pretty">
               <span>{(f.q.prompt || f.q.id).trim()}</span>
               {f.reason && <span className="text-zinc-600"> — {f.reason}</span>}
-              {f.q.citation && <CitationBadge citation={f.q.citation} className="ml-1.5" />}
+              {f.q.citation && (
+                <CitationBadge
+                  citation={f.q.citation}
+                  hidePage={PAGE_LABEL_SUPPRESSED_IDS.has(f.q.id)}
+                  className="ml-1.5"
+                />
+              )}
             </li>
           ))}
         </ul>
@@ -526,7 +532,12 @@ function QuestionNode({
         </span>
         {q.required && <span className="text-red-500 text-[14px]">*</span>}
         <span className="font-mono text-[11px] text-zinc-400">{q.id}</span>
-        {q.citation && <CitationBadge citation={q.citation} />}
+        {q.citation && (
+          <CitationBadge
+            citation={q.citation}
+            hidePage={PAGE_LABEL_SUPPRESSED_IDS.has(q.id)}
+          />
+        )}
         {q.member_context_path && (
           <span
             className="font-mono text-[10.5px] px-1.5 rounded bg-green-100 text-green-800"
@@ -626,15 +637,31 @@ function QuestionNode({
   );
 }
 
+// Meta "selector" questions — the indication picker and the
+// initiation/continuation phase picker — are structural branch choices that
+// don't cite a specific policy passage. Their citation.page values are
+// unreliable, so the UI suppresses the p.N label for them but still links
+// to the policy PDF for reference.
+const PAGE_LABEL_SUPPRESSED_IDS: ReadonlySet<string> = new Set([
+  // Indication picker — "which indication / condition is this PA for?"
+  'indication_selector',
+  'indication',
+  // Initiation-vs-continuation picker.
+  'phase_selector',
+  'tricare_phase',
+]);
+
 function CitationBadge({
   citation,
+  hidePage = false,
   className = '',
 }: {
   citation: Citation;
+  hidePage?: boolean;
   className?: string;
 }) {
   const docSourceUrl = useContext(DocSourceUrlContext);
-  const label = 'source';
+  const label = !hidePage && citation.page != null ? `p.${citation.page}` : 'source';
   const href = citeUrl(citation, docSourceUrl) || '#';
   const tooltip = [
     citation.source_id &&
