@@ -7,10 +7,9 @@ import { NextRequest, NextResponse } from 'next/server';
 //
 // Required env:
 //   SIMPLEX_API_KEY   — your Simplex API key
-//   SIMPLEX_API_URL   — backend base URL (defaults to the dev API server)
+//   SIMPLEX_API_URL   — backend base URL (defaults to production)
 
-const DEFAULT_API_URL =
-  'https://simplex-dev--api-server-and-container-service-fastapi-app.modal.run';
+const DEFAULT_API_URL = 'https://api.simplex.sh';
 
 export async function POST(request: NextRequest) {
   const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
